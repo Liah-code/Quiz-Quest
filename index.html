@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz Quest</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Trocchi&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="container min-h-screen w-full bg-pink-800 pt-10">
+    <!-------------------------------Container-------------------------------------->
+    <div class="mx-auto bg-pink-800">
+      <!-- Header -->
+      <div
+        class="flex flex-col sm:flex-row items-center sm:items-start sm:justify-between h-auto w-full px-5 mb-10"
+      >
+        <h1
+          class="text-white text-4xl sm:text-6xl md:text-7xl mb-6 sm:mb-0"
+          style="font-family: 'Abril Fatface', serif"
+        >
+          Quiz Quest
+        </h1>
+        <button
+          id="restartBtn"
+          class="bg-white w-[70px] h-[70px] text-xl font-semibold rounded-full sm:w-[90px] sm:h-[60px] cursor-pointer"
+        >
+          Restart
+        </button>
+      </div>
+
+      <!----------------------------------Score Section-------------------------------->
+      <div
+        class="score-box flex flex-col sm:flex-row items-center justify-around gap-6 sm:gap-0 w-full mt-5"
+      >
+        <div class="flex items-center gap-2">
+          <p
+            class="text-white text-lg sm:text-3xl md:text-5xl"
+            style="font-family: 'Arimo', sans-serif"
+          >
+            Score:
+          </p>
+          <div
+            class="bg-white w-[60px] h-[40px] sm:w-[90px] sm:h-[60px] rounded-xl flex items-center justify-center"
+          >
+            <p
+              class="text-lg sm:text-2xl md:text-3xl text-[#A4496A] font-semibold"
+            >
+              <span id="score">0</span>/20
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <p
+            class="text-white text-lg sm:text-3xl md:text-5xl"
+            style="font-family: 'Arimo', sans-serif"
+          >
+            High Score:
+          </p>
+          <div
+            class="bg-white w-[60px] h-[40px] sm:w-[90px] sm:h-[60px] rounded-xl flex items-center justify-center"
+          >
+            <p
+              id="highScore"
+              class="text-lg sm:text-2xl md:text-4xl text-[#A4496A] font-semibold"
+            >
+              0
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!------------------------------------Question Section------------------------------------->
+      <div
+        class="question-box w-[90%] max-w-[420px] mx-auto mt-10 sm:mt-20 bg-[#EDCBF6] rounded-xl relative py-6 px-6 sm:py-10 sm:px-12"
+      >
+        <p id="questionNumber" class="text-gray-700 font-semibold"></p>
+        <div
+          class="question-mark h-[50px] w-[50px] sm:h-[70px] sm:w-[70px] bg-white rounded-full absolute -top-6 left-1/2 -translate-x-1/2 flex items-center justify-center"
+        >
+          <p
+            class="text-3xl sm:text-5xl text-[#A4496A] font-semibold"
+            style="font-family: 'Trocchi', serif"
+          >
+            ?
+          </p>
+        </div>
+        <ul class="list-none text-lg sm:text-2xl md:text-3xl">
+          <li id="questionText"></li>
+        </ul>
+      </div>
+
+      <!---------------------------------------Answer Section---------------------------------------------->
+      <div
+        id="answersBox"
+        class="answers-box mt-10 grid grid-cols-1 sm:grid-cols-2 gap-6 justify-items-center w-full px-4"
+      >
+        <div
+          id="answerA"
+          class="answer w-full max-w-[250px] h-[45px] sm:h-[60px] bg-[#EDCBF6] rounded-xl flex items-center cursor-pointer"
+        >
+          <div
+            class="bg-[#A4496A] w-12 sm:w-[60px] h-full rounded-xl flex items-center justify-center text-white text-lg sm:text-2xl"
+          >
+            a
+          </div>
+          <span class="ml-4 text-sm sm:text-xl"></span>
+        </div>
+        <div
+          id="answerB"
+          class="answer w-full max-w-[250px] h-[45px] sm:h-[60px] bg-[#EDCBF6] rounded-xl flex items-center cursor-pointer"
+        >
+          <div
+            class="bg-[#A4496A] w-12 sm:w-[60px] h-full rounded-xl flex items-center justify-center text-white text-lg sm:text-2xl"
+          >
+            b
+          </div>
+          <span class="ml-4 text-sm sm:text-xl"></span>
+        </div>
+        <div
+          id="answerC"
+          class="answer w-full max-w-[250px] h-[45px] sm:h-[60px] bg-[#EDCBF6] rounded-xl flex items-center cursor-pointer"
+        >
+          <div
+            class="bg-[#A4496A] w-12 sm:w-[60px] h-full rounded-xl flex items-center justify-center text-white text-lg sm:text-2xl"
+          >
+            c
+          </div>
+          <span class="ml-4 text-sm sm:text-xl"></span>
+        </div>
+        <div
+          id="answerD"
+          class="answer w-full max-w-[250px] h-[45px] sm:h-[60px] bg-[#EDCBF6] rounded-xl flex items-center cursor-pointer"
+        >
+          <div
+            class="bg-[#A4496A] w-12 sm:w-[60px] h-full rounded-xl flex items-center justify-center text-white text-lg sm:text-2xl"
+          >
+            d
+          </div>
+          <span class="ml-4 text-sm sm:text-xl"></span>
+        </div>
+      </div>
+
+      <!-----------------------------Switch Section--------------------------------->
+      <div
+        class="switch-container flex flex-col sm:flex-row gap-4 sm:gap-8 items-center justify-center w-full mt-10 px-4"
+      >
+        <button
+          id="prevBtn"
+          class="w-full max-w-[150px] h-[40px] sm:h-[50px] bg-[#EDCBF6] rounded-xl flex items-center justify-center cursor-pointer"
+        >
+          <p class="text-sm sm:text-xl">
+            <i class="fa-solid fa-arrow-left"></i> Previous
+          </p>
+        </button>
+        <button
+          id="nextBtn"
+          class="w-full max-w-[150px] h-[40px] sm:h-[50px] bg-[#EDCBF6] rounded-xl flex items-center justify-center cursor-pointer"
+        >
+          <p class="text-sm sm:text-xl">
+            Next <i class="fa-solid fa-arrow-right"></i>
+          </p>
+        </button>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
