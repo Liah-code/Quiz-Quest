@@ -51,91 +51,128 @@ const questions = [
   }
 ];
 
+let currentQuestion = parseInt(localStorage.getItem("currentQuestion")) || 0;
+let score = parseInt(localStorage.getItem("score")) || 0;
+let highScore = parseInt(localStorage.getItem("highScore")) || 0;
+let answered = false;
 
-let currentQuestion = 0
-let score = 0
-let highScore = 0
-let answered = false
+const savedAnswers = JSON.parse(localStorage.getItem("answers")) || {};
 
-const questionText = document.getElementById("questionText")
+const questionText = document.getElementById("questionText");
 const answers = [
   document.getElementById("answerA"),
   document.getElementById("answerB"),
   document.getElementById("answerC"),
   document.getElementById("answerD")
-]
-const scoreDisplay = document.getElementById("score")
-const highScoreDisplay = document.getElementById("highScore")
-const nextBtn = document.getElementById("nextBtn")
-const prevBtn = document.getElementById("prevBtn")
-const restartBtn = document.getElementById("restartBtn")
-
+];
+const scoreDisplay = document.getElementById("score");
+const highScoreDisplay = document.getElementById("highScore");
+const nextBtn = document.getElementById("nextBtn");
+const prevBtn = document.getElementById("prevBtn");
+const restartBtn = document.getElementById("restartBtn");
 const questionNumber = document.getElementById("questionNumber");
+
+scoreDisplay.textContent = score;
+highScoreDisplay.textContent = highScore;
+
 function loadQuestion() {
-  const q = questions[currentQuestion]
-  questionText.textContent = q.question
+  const q = questions[currentQuestion];
+  questionText.textContent = q.question;
   questionNumber.textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
-  answered = false
+  answered = false;
+
   answers.forEach((answer, i) => {
-    const span = answer.querySelector("span")
-    span.textContent = q.options[i]
-    answer.classList.remove("bg-green-400", "bg-red-400")
-    answer.classList.add("bg-[#EDCBF6]")
+    const span = answer.querySelector("span");
+    span.textContent = q.options[i];
+    answer.classList.remove("bg-green-400", "bg-red-400");
+    answer.classList.add("bg-[#EDCBF6]");
     answer.onclick = () => {
-      if (!answered) selectAnswer(q.options[i], answer)
-    }
-  })
-
-  
-}
-
-function selectAnswer(option, answerDiv) {
-  const q = questions[currentQuestion]
-  answered = true
-  if (option === q.correct) {
-    answerDiv.classList.remove("bg-[#EDCBF6]")
-    answerDiv.classList.add("bg-green-400")
-    score++
-    scoreDisplay.textContent = score
-    if (score > highScore) {
-      highScore = score
-      highScoreDisplay.textContent = highScore
-    }
-  } else {
-    answerDiv.classList.remove("bg-[#EDCBF6]")
-    answerDiv.classList.add("bg-red-400")
-    answers.forEach(a => {
-      if (a.querySelector("span").textContent === q.correct) {
-        a.classList.remove("bg-[#EDCBF6]")
-        a.classList.add("bg-green-400")
+      if (!answered && !savedAnswers[currentQuestion]) {
+        selectAnswer(q.options[i], answer);
       }
-    })
+    };
+  });
+
+
+  if (savedAnswers[currentQuestion]) {
+    answered = true;
+    const chosen = savedAnswers[currentQuestion];
+    answers.forEach(a => {
+      const text = a.querySelector("span").textContent;
+      if (text === chosen) {
+        if (text === q.correct) {
+          a.classList.remove("bg-[#EDCBF6]");
+          a.classList.add("bg-green-400");
+        } else {
+          a.classList.remove("bg-[#EDCBF6]");
+          a.classList.add("bg-red-400");
+        }
+      }
+      if (text === q.correct) {
+        a.classList.remove("bg-[#EDCBF6]");
+        a.classList.add("bg-green-400");
+      }
+    });
   }
 }
 
+function selectAnswer(option, answerDiv) {
+  const q = questions[currentQuestion];
+  answered = true;
+  savedAnswers[currentQuestion] = option;
+  localStorage.setItem("answers", JSON.stringify(savedAnswers));
+
+  if (option === q.correct) {
+    answerDiv.classList.remove("bg-[#EDCBF6]");
+    answerDiv.classList.add("bg-green-400");
+    score++;
+    scoreDisplay.textContent = score;
+    if (score > highScore) {
+      highScore = score;
+      highScoreDisplay.textContent = highScore;
+    }
+  } else {
+    answerDiv.classList.remove("bg-[#EDCBF6]");
+    answerDiv.classList.add("bg-red-400");
+    answers.forEach(a => {
+      if (a.querySelector("span").textContent === q.correct) {
+        a.classList.remove("bg-[#EDCBF6]");
+        a.classList.add("bg-green-400");
+      }
+    });
+  }
+
+  localStorage.setItem("score", score);
+  localStorage.setItem("highScore", highScore);
+}
+
 nextBtn.addEventListener("click", () => {
-  if (!answered) {
+  if (!answered && !savedAnswers[currentQuestion]) {
     alert("Please select an answer before moving on!");
     return;
   }
   if (currentQuestion < questions.length - 1) {
     currentQuestion++;
+    localStorage.setItem("currentQuestion", currentQuestion);
     loadQuestion();
   }
 });
 
 prevBtn.addEventListener("click", () => {
   if (currentQuestion > 0) {
-    currentQuestion--
-    loadQuestion()
+    currentQuestion--;
+    localStorage.setItem("currentQuestion", currentQuestion);
+    loadQuestion();
   }
-})
+});
 
 restartBtn.addEventListener("click", () => {
-  currentQuestion = 0
-  score = 0
-  scoreDisplay.textContent = score
-  loadQuestion()
-})
+  currentQuestion = 0;
+  score = 0;
+  answered = false;
+  localStorage.clear();
+  scoreDisplay.textContent = score;
+  loadQuestion();
+});
 
-loadQuestion()
+loadQuestion();
